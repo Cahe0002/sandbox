@@ -1,13 +1,22 @@
 import Image from "next/image";
+import { Suspense } from "react";
 
 export default function Home() {
-  return <FetchData />;
+  return (
+    <Suspense fallback="loading...">
+      <FetchData />
+    </Suspense>
+  );
 }
 
 const FetchData = async () => {
-  const response = await fetch("https://dummyjson.com/products");
-  const data = await response.json();
+  const response = await fetch("https://dummyjson.com/products", {
+    headers: {
+      "x-api-key": process.env.API_KEY,
+    },
+  });
 
+  const data = await response.json();
   return data.products.map((product, index) => (
     <div key={index}>
       <Image
